@@ -23,7 +23,7 @@
   --bg-image-url: url('./images/bg-desktop-light.jpg');
 
   /* font size */
-  
+  --fs-input: 0.90rem;
   --fs-xs: 0.75rem; 
   --fs-lg: 1rem;  /* 22.5px */
   --fs-xl: 1.5rem;  /* 22.5px */
@@ -141,13 +141,16 @@
         letter-spacing: 15px;
     }
 
-    input::placeholder,
     .todo-text,
     .items-counter,
-    .btn-clear-completed,
-    input{
+    .btn-clear-completed{
         line-height: 0;
         font-size: var(--fs-xs);
+    }
+
+    input::placeholder,
+    input{
+        font-size: var(--fs-input);
     }
 
     /* .todo-list,
