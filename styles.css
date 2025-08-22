@@ -1,0 +1,328 @@
+@font-face {
+    font-family: "Josefin Sans";
+    src: url(./assets/JosefinSans-VariableFont_wght.woff2) format('woff2');
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+}
+
+:root {
+  /* Primary */
+  --blue-500: hsl(220, 98%, 61%);
+  --check-bg: linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+
+  /* gradient border */
+  --gradient-border: hsl(192, 100%, 67%), hsl(280, 87%, 65%);
+  /* Light Theme */
+  --white-black: hsl(0, 0%, 100%); 
+  --bg-primary: hsl(0, 0%, 98%);        /* Fondo principal (gray-50) */
+  --bg-secondary: hsl(233, 11%, 84%);   /* Fondo secundario (gray-300) */
+  --text-primary: hsl(235, 19%, 35%);   /* Texto principal (navy-850) */
+  --text-secondary: hsl(236, 9%, 61%);  /* Texto secundario (gray-600-light) */
+  --accent: hsl(234, 39%, 85%);         /* Color de acento (purple-300-light) */
+  --bg-image-url: url('./images/bg-desktop-light.jpg');
+
+  /* font size */
+  
+  --fs-xs: 0.75rem; 
+  --fs-lg: 1rem;  /* 22.5px */
+  --fs-xl: 1.5rem;  /* 22.5px */
+  --fs-xxl: 2rem;   
+
+   /* font weight */
+  
+  --fw-400: 400;
+  --fw-700: 700;
+
+  /* padding */
+  --px: 20px;
+  --py: 20px;
+
+  /* margin */
+  --mt: 55px
+}
+
+/* Dark Theme */
+.dark-theme {
+    --white-black: hsl(0, 0%, 0%); 
+  --bg-primary: hsl(235, 21%, 11%);     /* Fondo principal (navy-950) */
+  --bg-secondary: hsl(235, 24%, 19%);   /* Fondo secundario (navy-900) */
+  --text-primary: hsl(236, 9%, 61%);    /* Texto principal (gray-600-dark) */
+  --text-secondary: hsl(233, 14%, 35%); /* Texto secundario (purple-700) */
+  --accent: hsl(234, 39%, 85%);         /* Color de acento (purple-300-dark) */
+  --accent-hover: hsl(236, 33%, 92%);   /* Hover para botones o links (purple-100-hover) */
+  --accent-dark: hsl(235, 16%, 43%);    /* Variante de acento más oscuro (purple-600) */
+  --accent-darker: hsl(237, 14%, 26%);  /* Variante de acento aún más oscuro (purple-800) */
+  --bg-image-url: url('./images/bg-desktop-dark.jpg');
+}
+
+@layer reset{
+    *,
+    *::after,
+    *::before{
+        box-sizing: border-box;
+        margin: 0;
+    }
+
+    h1,
+    h3,
+    h3{
+       margin: 0;
+    }
+
+    button,label{
+        display: block;
+    }
+
+    img{
+        display: block;
+        max-width: 100%;
+    }
+
+    html{
+        font-size: 18px;
+    }
+
+    button,
+    input{
+        border: none;
+        background-color: transparent;
+    }
+
+    button{
+        cursor: pointer;
+    }
+
+    ul{
+        list-style: none;
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+}
+
+@layer base{
+      .label-hidden{
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    input[type="checkbox"]{
+        position: absolute;
+        opacity: 0;
+        pointer-events: 0;
+    }
+
+    html{
+        font-family: Josefin Sans, sans-serif;
+        color: var(--text-primary);
+    }
+
+    body{
+        background-color: var(--bg-primary);
+    }
+
+    input::placeholder,
+    button, 
+    input{
+        font-family: Josefin Sans, sans-serif;
+    }
+
+    h1{
+        color: white;
+        font-size: var(--fs-xl);
+        letter-spacing: 15px;
+    }
+
+    input::placeholder,
+    .todo-text,
+    .items-counter,
+    .btn-clear-completed,
+    input{
+        line-height: 0;
+        font-size: var(--fs-xs);
+    }
+
+    /* .todo-list,
+    .todo-form{
+        background-color: var(--white-black);
+    } */
+
+    .state-buttons button{
+        font-size: var(--fs-lg);
+        color: var(--text-secondary);
+        font-weight: var(--fw-700);
+    }
+
+    .instructions p{
+        font-size: var(--fs-lg);
+        color: var(--text-secondary);
+    }
+
+    .items-counter,
+    .btn-clear-completed,
+    input::placeholder{
+        color: var(--text-secondary);
+    }
+
+    .round{
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: 1px solid var(--accent);
+        cursor: pointer;
+    }
+
+    .round:hover{
+        border: 1.6px solid transparent;
+        background: linear-gradient(white 0 0) padding-box,
+        linear-gradient(120deg, var(--gradient-border)) border-box;
+    }
+
+    .div-footer{
+        padding: var(--px) var(--py);
+    }
+
+    @media (min-width: 590px){
+        h1{
+            font-size: var(--fs-xxl);
+        }
+
+        input::placeholder,
+        .todo-text,
+        .items-counter,
+        .btn-clear-completed,
+        input{
+            font-size: var(--fs-lg);
+        }
+    }
+    
+}
+
+@layer layout{
+    .bg-image{
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-image: var(--bg-image-url);
+        height: 30vh;
+        width: 100vw;
+        z-index: -1;
+        background-size: cover;
+        background-position: center;
+    }
+
+    main{
+        margin: auto;
+        padding: 50px 20px;
+        max-width: 700px;
+    }
+
+    header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    form{
+        display: flex;
+        align-items: center;
+        background-color: var(--white-black);
+        margin-top: var(--mt);
+        background-color: var(--white-black);
+        padding: 10px var(--py);
+    }
+
+    .round{
+        margin-right: 10px;
+    }
+    
+    input{
+        padding-left: 10px;
+    }
+
+    form input{
+        flex: 1;
+        height: 40px;
+    }
+
+    form input:focus {
+        outline: 1px dashed var(--text-primary);
+    }
+
+    .todo-list{
+        background-color: var(--white-black);
+    }
+
+    .interactive-content{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .interactive-content > *{
+        border-radius: 5px;
+        background-color: var(--white-black);
+        overflow: hidden;
+    }
+
+    .interactive-content > :nth-child(2),
+    .interactive-content > :nth-child(3){
+        box-shadow: 0px 5px 30px -10px var(--accent);
+    }
+
+    .label-align{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    ul li div{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--px) var(--py);
+    }
+
+    ul li{
+                border-bottom: 1px solid var(--accent);
+    }
+
+    .custom-check{
+        position: relative;
+    }
+
+    .custom-check svg {
+        position: absolute; /* el svg se posiciona respecto al span */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* lo centra */
+    }
+
+    .todo-summary{
+        display: flex;
+        justify-content: space-between;
+        padding: var(--px) var(--py);
+        align-items: center;
+    }
+
+    .state-buttons{
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        /* padding: var(--px) var(--py); */
+    }
+
+    .instructions{
+        margin-top: var(--mt);
+        text-align: center;
+    }
+
+}
