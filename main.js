@@ -30,7 +30,7 @@ btnTheme.addEventListener('click', (e)=> {
     active.classList.add('hide-above');
     isAnimating = false;
   }, {once:true});
-})
+});
 
 
 //Interactive section div repositioning
@@ -55,6 +55,4 @@ function toggleTheme() {
   const current = body.dataset.theme;
   body.dataset.theme = current === 'dark' ? 'light' : 'dark';
 }
-
-
 

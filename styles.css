@@ -363,13 +363,13 @@
         opacity: 1;
     }
 
-
-    .hide-above{
+    .btn-theme svg.hide-above{
         top: -20px;
         opacity: 0;
+        pointer-events: none;
     }
 
-    .move-down{
+    .btn-theme svg.move-down{
         top: 70px;
         opacity: 0;
     }
