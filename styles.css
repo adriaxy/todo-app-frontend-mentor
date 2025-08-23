@@ -20,6 +20,7 @@
   --text-primary: hsl(235, 19%, 35%);   /* Texto principal (navy-850) */
   --text-secondary: hsl(236, 9%, 61%);  /* Texto secundario (gray-600-light) */
   --accent: hsl(234, 39%, 85%);         /* Color de acento (purple-300-light) */
+  --shadow: hsl(234, 39%, 85%);         /* Color de acento (purple-300-light) */
   --bg-image-url: url('./images/bg-desktop-light.jpg');
 
   /* font size */
@@ -43,13 +44,14 @@
 }
 
 /* Dark Theme */
-.dark-theme {
-    --white-black: hsl(0, 0%, 0%); 
+[data-theme="dark"] {
+  --white-black: hsl(235, 24%, 19%);
   --bg-primary: hsl(235, 21%, 11%);     /* Fondo principal (navy-950) */
   --bg-secondary: hsl(235, 24%, 19%);   /* Fondo secundario (navy-900) */
-  --text-primary: hsl(236, 9%, 61%);    /* Texto principal (gray-600-dark) */
+  --text-primary: hsl(234, 39%, 85%);    /* Texto principal (gray-600-dark) */
   --text-secondary: hsl(233, 14%, 35%); /* Texto secundario (purple-700) */
-  --accent: hsl(234, 39%, 85%);         /* Color de acento (purple-300-dark) */
+  --accent: hsl(234, 39%, 85%);
+  --shadow: hsl(240, 20%, 3%);
   --accent-hover: hsl(236, 33%, 92%);   /* Hover para botones o links (purple-100-hover) */
   --accent-dark: hsl(235, 16%, 43%);    /* Variante de acento más oscuro (purple-600) */
   --accent-darker: hsl(237, 14%, 26%);  /* Variante de acento aún más oscuro (purple-800) */
@@ -127,6 +129,7 @@
 
     body{
         background-color: var(--bg-primary);
+        transition: background-color 300ms ease;
     }
 
     input::placeholder,
@@ -140,6 +143,13 @@
         font-size: var(--fs-xl);
         letter-spacing: 15px;
     }
+
+    li,
+    input{
+        color: var(--text-primary);
+    }
+
+    
 
     .todo-text,
     .items-counter,
@@ -179,7 +189,7 @@
         width: 25px;
         height: 25px;
         border-radius: 50%;
-        border: 1px solid var(--accent);
+        border: 0.5px solid var(--accent);
         cursor: pointer;
     }
 
@@ -215,7 +225,7 @@
         top: 0;
         left: 0;
         background-image: var(--bg-image-url);
-        height: 30vh;
+        height: 37vh;
         width: 100vw;
         z-index: -1;
         background-size: cover;
@@ -223,7 +233,7 @@
     }
 
     main{
-        margin: auto;
+        margin: 30px auto;
         padding: 50px 20px;
         max-width: 700px;
     }
@@ -256,7 +266,7 @@
         height: 40px;
     }
 
-    form input:focus {
+    form input:focus-visible {
         outline: 1px dashed var(--text-primary);
     }
 
@@ -278,7 +288,7 @@
 
     .interactive-content > :nth-child(2),
     .interactive-content > :nth-child(3){
-        box-shadow: 0px 5px 30px -10px var(--accent);
+        box-shadow: 0px 5px 30px -10px var(--shadow);
     }
 
     .label-align{
@@ -295,7 +305,7 @@
     }
 
     ul li{
-                border-bottom: 1px solid var(--accent);
+        border-bottom: 0.5px solid var(--text-secondary);
     }
 
     .custom-check{
@@ -328,4 +338,39 @@
         text-align: center;
     }
 
+    .btn-theme{
+        position: relative;
+        width: 50px;
+        height: 50px;
+    }
+
+    header{
+        position: relative;
+    }
+
+    .btn-theme svg{
+        position: absolute;
+        left: 50%;
+        transition: top 0.2s ease,
+            opacity 0.2s ease;
+    }
+
+    .dark-theme-svg,
+    .light-theme-svg{        
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+
+
+    .hide-above{
+        top: -20px;
+        opacity: 0;
+    }
+
+    .move-down{
+        top: 70px;
+        opacity: 0;
+    }
 }
