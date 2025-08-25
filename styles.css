@@ -195,12 +195,16 @@
 
     .round:hover{
         border: 1.6px solid transparent;
-        background: linear-gradient(white 0 0) padding-box,
+        background: linear-gradient(var(--white-black) 0 0) padding-box,
         linear-gradient(120deg, var(--gradient-border)) border-box;
     }
 
     .div-footer{
         padding: var(--px) var(--py);
+    }
+
+    .empty-list{
+        color: var(--text-primary);
     }
 
     @media (min-width: 590px){
@@ -286,8 +290,7 @@
         overflow: hidden;
     }
 
-    .interactive-content > :nth-child(2),
-    .interactive-content > :nth-child(3){
+    .interactive-content > *{
         box-shadow: 0px 5px 30px -10px var(--shadow);
     }
 
@@ -297,14 +300,15 @@
         gap: 10px;
     }
 
-    ul li div{
+    ul li{
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: var(--px) var(--py);
     }
 
-    ul li{
+    ul li,
+    .empty-list{
         border-bottom: 0.5px solid var(--text-secondary);
     }
 
@@ -342,6 +346,11 @@
         position: relative;
         width: 50px;
         height: 50px;
+        transition: scale 0.5s ease;
+    }
+
+    .btn-theme:hover{
+        scale: 1.2;
     }
 
     header{
@@ -351,8 +360,8 @@
     .btn-theme svg{
         position: absolute;
         left: 50%;
-        transition: top 0.2s ease,
-            opacity 0.2s ease;
+        transition: top 0.4s ease,
+            opacity 0.4s ease;
     }
 
     .dark-theme-svg,
@@ -372,5 +381,12 @@
     .btn-theme svg.move-down{
         top: 70px;
         opacity: 0;
+    }
+
+    .empty-list{
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

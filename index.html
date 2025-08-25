@@ -29,7 +29,13 @@
         <input id="todo-input" type="text" placeholder="Create a new todo... ">
       </form>
       <div class="todo-list" aria-label="items of todo list">
-        <ul>
+        <div class="empty-list">
+          <span>No todo items left</span>
+        </div>
+        <ul class="list-container"> 
+
+        </ul>
+        <!-- <ul>
           <li>
             <div>
               
@@ -111,7 +117,7 @@
             </div>
           </li>
       
-        </ul>
+        </ul> -->
         <div class="todo-summary">
           <span class="items-counter"><span>5</span> items left</span>
           <div class="state-buttons">
