@@ -14,6 +14,7 @@ const body = $('body');
 const darkBtn = $('.dark-theme-svg')
 const lightBtn = $('.light-theme-svg');
 let isAnimating = false;
+const addItemBtn = $('.add-item-btn');
 const btnDelete = $('.delete');
 
 const form = $('.todo-form');
@@ -40,19 +41,24 @@ function createNewItem(inputElement){
 };
 
 //Form
-form.addEventListener('submit', (e)=> {
+form.addEventListener('submit', handleAddItem);
+
+addItemBtn.addEventListener('click', handleAddItem);
+
+function handleAddItem(e){
   e.preventDefault();
   if(!input.value) return; 
+  addItem();
+}
 
-  if(input.value){
-    emptyList.style.display='none';
-    createNewItem(input);
+function addItem(){
+  emptyList.style.display='none';
+      createNewItem(input);
 
-    const lastItem = listItems.length-1;
-    listContainer.prepend(addItemToList(listItems[lastItem].id, listItems[lastItem].text))
-    input.value = ''
-  }
-})
+      const lastItem = listItems.length-1;
+      listContainer.prepend(addItemToList(listItems[lastItem].id, listItems[lastItem].text))
+      input.value = ''
+}
 
 listContainer.addEventListener('click', (e)=> {
   if(e.target.tagName === 'BUTTON'){
@@ -62,21 +68,6 @@ listContainer.addEventListener('click', (e)=> {
     e.target.closest('li').remove();
   } 
 })
-
-// listContainer.addEventListener('click', (e)=> {
-//   if(e.target.tagName === 'BUTTON'){
-//     btnId = Number(e.target.dataset.id);
-//     console.log(listItems)
-//     listItems.forEach((element, index)=> {
-//       const objectValues = Object.values(element);
-//       if(objectValues.find((element) => element === btnId))listItems.splice(index, 1);
-//     })
-//     console.log(listItems)
-//     e.target.closest('li').remove();
-//         console.log(listItems)
-//   } 
-// })
-
 
 function addItemToList(id, text){
   const li = document.createElement('li');

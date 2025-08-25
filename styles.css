@@ -42,6 +42,8 @@
 
   /* margin */
   --mt: 55px
+
+  /*stroke btn add*/
 }
 
 /* Dark Theme */
@@ -400,4 +402,15 @@
         background: url(./images/icon-cross.svg) no-repeat center;
         background-size: cover;
     }
+
+    .add-item-btn svg{
+        stroke: var(--text-secondary);
+        transition: scale 0.2s ease;
+    }
+
+    .add-item-btn:hover svg{
+        stroke: var(--text-primary);
+        scale: 1.1;
+    }
+
 }
