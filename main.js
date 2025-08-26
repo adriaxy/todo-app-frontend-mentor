@@ -20,13 +20,13 @@ const btnDelete = $('.delete');
 const form = $('.todo-form');
 const input = $id('todo-input');
 const emptyList = $('.empty-list');
+const showEmptyListMessage = () => emptyList.style.display = 'flex';
 const listContainer = $('.list-container');
 let modes = {
     all: 'all',
     active: 'active',
     completed: 'completed'
   }
-const li = $('.li')
 
 const listItems = []
 
@@ -63,22 +63,68 @@ function addItem(){
 listContainer.addEventListener('click', (e)=> {
   if(e.target.tagName === 'BUTTON'){
     const btnId = Number(e.target.dataset.id);
-    const index = listItems.findIndex((element) => element.id === btnId);
+    const index = findIndexItem(btnId);
     if (index !== -1) listItems.splice(index, 1)
     e.target.closest('li').remove();
-  } 
-})
+  console.log(listItems.length)
+    if(listItems.length === 0)showEmptyListMessage();
+    return
+  };
+
+  if(['LI', 'INPUT', 'LABEL', 'SPAN'].includes(e.target.tagName)){
+    const inputID = e.target.closest('li').id;
+    const todoText = $(`span[data-text="${inputID}"]`);
+    const customCheck = $(`span[data-check="${inputID}"]`);
+    const customCheckSVG = $(`svg[data-svg="${inputID}"]`)
+    const index = findIndexItem(Number(inputID));
+    changeCompletedState(inputID);
+    const completedState = listItems[index].completed;
+
+   if(completedState){
+    todoText.classList.add('completed');
+    customCheck.classList.add('round-check');
+    customCheckSVG.style.display = 'block'
+   } else {
+    todoText.classList.remove('completed');
+    customCheck.classList.remove('round-check');
+    customCheckSVG.style.display = 'none'
+  }
+  };
+});
+
+listContainer.addEventListener('keydown', (e)=> {
+  if(e.target.tagName === 'LI'){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      e.target.click();
+    }
+  }
+});
+
+function changeCompletedState(id){
+  const liId = Number(id);
+  const index = findIndexItem(liId);
+  const result = index !== -1 
+    ? listItems[index].completed = !listItems[index].completed 
+    : 'index not found';
+  return result;
+}
+
+function findIndexItem(targetId){
+  return listItems.findIndex(element => element.id === targetId);
+}
 
 function addItemToList(id, text){
   const li = document.createElement('li');
   li.classList.add('li');
   li.id = id;
+  li.tabIndex = 0;
   li.innerHTML = `<label for="input-${id}" class="label-li">
-        <input type="checkbox" id="input-${id}">
-        <span class="custom-check round">
-          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9"><path fill="none" stroke="#000" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>
+        <input type="checkbox" data-input="${id}">
+        <span class="custom-check round" data-check="${id}" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9" data-svg="${id}" class="check-svg"><path fill="none" stroke="#fff" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>
         </span>
-        <span class="todo-text">${text}</span>
+        <span class="todo-text" data-text="${id}">${text}</span>
       </label>
       <button type="button" class="delete" data-id="${id}">
       </button>`
@@ -129,9 +175,6 @@ function toggleTheme() {
   const current = body.dataset.theme;
   body.dataset.theme = current === 'dark' ? 'light' : 'dark';
 }
-
-
-
 
 
 

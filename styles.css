@@ -41,9 +41,10 @@
   --py: 20px;
 
   /* margin */
-  --mt: 55px
+  --mt: 55px;
 
-  /*stroke btn add*/
+  /*transition values*/
+  --scale: 0.2s
 }
 
 /* Dark Theme */
@@ -53,7 +54,7 @@
   --bg-secondary: hsl(235, 24%, 19%);   /* Fondo secundario (navy-900) */
   --text-primary: hsl(234, 39%, 85%);    /* Texto principal (gray-600-dark) */
   --text-secondary: hsl(233, 14%, 35%); /* Texto secundario (purple-700) */
-  --accent: hsl(234, 39%, 85%);
+  /* --accent: hsl(234, 39%, 85%); */
   --shadow: hsl(240, 20%, 3%);
   --accent-hover: hsl(236, 33%, 92%);   /* Hover para botones o links (purple-100-hover) */
   --accent-dark: hsl(235, 16%, 43%);    /* Variante de acento más oscuro (purple-600) */
@@ -122,7 +123,8 @@
     input[type="checkbox"]{
         position: absolute;
         opacity: 0;
-        pointer-events: 0;
+        width: 0;
+        height: 0;
     }
 
     html{
@@ -207,6 +209,9 @@
     }
 
     .empty-list{
+        display: flex; 
+        justify-content: center;
+        align-items: center;
         color: var(--text-primary);
     }
 
@@ -224,6 +229,20 @@
         }
     }
     
+    .todo-text{
+        transition: color var(--scale) ease;
+    }
+
+    .completed{
+        color: var(--accent);
+        text-decoration: line-through;
+        text-decoration-thickness: 1px;  
+        text-decoration-skip-ink: none;  
+    }
+
+    .round-check{
+        background: linear-gradient(to bottom right, var(--gradient-border));
+    }
 }
 
 @layer layout{
@@ -306,6 +325,10 @@
         cursor: pointer;
     }
 
+    li{
+        cursor: pointer;
+    }
+
     ul li{
         display: flex;
         align-items: center;
@@ -322,11 +345,12 @@
         position: relative;
     }
 
-    .custom-check svg {
+    .check-svg {
         position: absolute; /* el svg se posiciona respecto al span */
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%); /* lo centra */
+        display: none;
     }
 
     .todo-summary{
@@ -352,11 +376,11 @@
         position: relative;
         width: 50px;
         height: 50px;
-        transition: scale 0.5s ease;
+        transition: scale var(--scale) ease;
     }
 
     .btn-theme:hover{
-        scale: 1.2;
+        scale: 1.1;
     }
 
     header{
@@ -391,26 +415,22 @@
 
     .empty-list{
         height: 200px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .delete{
-        width: 20px;
-        height: 20px;
+        width: 17px;
+        height: 17px;
         background: url(./images/icon-cross.svg) no-repeat center;
         background-size: cover;
     }
 
     .add-item-btn svg{
         stroke: var(--text-secondary);
-        transition: scale 0.2s ease;
+        transition: scale var(--scale) ease;
     }
 
     .add-item-btn:hover svg{
         stroke: var(--text-primary);
         scale: 1.1;
     }
-
 }
