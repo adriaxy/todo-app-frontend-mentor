@@ -47,7 +47,10 @@ addItemBtn.addEventListener('click', handleAddItem);
 
 function handleAddItem(e){
   e.preventDefault();
-  if(!input.value) return; 
+  if(!input.value){
+    alert('Please, write a new task');
+    return
+  }; 
   addItem();
 }
 
@@ -61,7 +64,7 @@ function addItem(){
 }
 
 listContainer.addEventListener('click', (e)=> {
-  if(e.target.tagName === 'BUTTON'){
+  if(e.target.closest('button')){
     const btnId = Number(e.target.dataset.id);
     const index = findIndexItem(btnId);
     if (index !== -1) listItems.splice(index, 1)
@@ -71,7 +74,8 @@ listContainer.addEventListener('click', (e)=> {
     return
   };
 
-  if(['LI', 'INPUT', 'LABEL', 'SPAN'].includes(e.target.tagName)){
+  const li = e.target.closest('li');
+  if(li){
     const inputID = e.target.closest('li').id;
     const todoText = $(`span[data-text="${inputID}"]`);
     const customCheck = $(`span[data-check="${inputID}"]`);
@@ -83,14 +87,50 @@ listContainer.addEventListener('click', (e)=> {
    if(completedState){
     todoText.classList.add('completed');
     customCheck.classList.add('round-check');
-    customCheckSVG.style.display = 'block'
+    customCheckSVG.style.display = 'block';
+    customCheck.classList.remove('round-hoverable');
    } else {
     todoText.classList.remove('completed');
     customCheck.classList.remove('round-check');
-    customCheckSVG.style.display = 'none'
+    customCheckSVG.style.display = 'none';
+    customCheck.classList.add('round-hoverable');
   }
   };
 });
+
+// listContainer.addEventListener('click', (e)=> {
+//   if(e.target.tagName === 'BUTTON'){
+//     const btnId = Number(e.target.dataset.id);
+//     const index = findIndexItem(btnId);
+//     if (index !== -1) listItems.splice(index, 1)
+//     e.target.closest('li').remove();
+//   console.log(listItems.length)
+//     if(listItems.length === 0)showEmptyListMessage();
+//     return
+//   };
+
+//   if(['LI', 'INPUT', 'LABEL', 'SPAN', 'SVG'].includes(e.target.tagName)){
+//     const inputID = e.target.closest('li').id;
+//     const todoText = $(`span[data-text="${inputID}"]`);
+//     const customCheck = $(`span[data-check="${inputID}"]`);
+//     const customCheckSVG = $(`svg[data-svg="${inputID}"]`)
+//     const index = findIndexItem(Number(inputID));
+//     changeCompletedState(inputID);
+//     const completedState = listItems[index].completed;
+
+//    if(completedState){
+//     todoText.classList.add('completed');
+//     customCheck.classList.add('round-check');
+//     customCheckSVG.style.display = 'block';
+//     customCheck.classList.remove('round-hoverable');
+//    } else {
+//     todoText.classList.remove('completed');
+//     customCheck.classList.remove('round-check');
+//     customCheckSVG.style.display = 'none';
+//     customCheck.classList.add('round-hoverable');
+//   }
+//   };
+// });
 
 listContainer.addEventListener('keydown', (e)=> {
   if(e.target.tagName === 'LI'){
@@ -121,7 +161,7 @@ function addItemToList(id, text){
   li.tabIndex = 0;
   li.innerHTML = `<label for="input-${id}" class="label-li">
         <input type="checkbox" data-input="${id}">
-        <span class="custom-check round" data-check="${id}" aria-hidden="true">
+        <span class="custom-check round round-hoverable" data-check="${id}" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9" data-svg="${id}" class="check-svg"><path fill="none" stroke="#fff" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>
         </span>
         <span class="todo-text" data-text="${id}">${text}</span>

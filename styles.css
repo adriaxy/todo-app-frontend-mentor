@@ -198,7 +198,7 @@
         cursor: pointer;
     }
 
-    .round:hover{
+    .round-hoverable:hover{
         border: 1.6px solid transparent;
         background: linear-gradient(var(--white-black) 0 0) padding-box,
         linear-gradient(120deg, var(--gradient-border)) border-box;
@@ -212,7 +212,7 @@
         display: flex; 
         justify-content: center;
         align-items: center;
-        color: var(--text-primary);
+        color: var(--text-secondary);
     }
 
     @media (min-width: 590px){
