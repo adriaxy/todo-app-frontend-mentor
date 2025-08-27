@@ -45,7 +45,10 @@ function createNewItem(inputElement){
 };
 console.log(currentFilter)
 stateButtons.addEventListener('click', (e)=> {
-  // if(listItems.length === 0)return;
+  if(listItems.length === 0){
+    alert('There is no items on the list :(');
+    return
+  };
   const activeItems = listItems.filter(element => element.completed === false);
   const liElements = $$('.li')
   const all = e.target.dataset.filter==='all';
