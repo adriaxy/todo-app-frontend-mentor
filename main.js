@@ -16,6 +16,10 @@ const lightBtn = $('.light-theme-svg');
 let isAnimating = false;
 const addItemBtn = $('.add-item-btn');
 const btnDelete = $('.delete');
+let currentFilter = 'all';
+const changeFilter = (filter) => currentFilter = (filter);
+const currentBtn = $$('.btn-state');
+
 
 const form = $('.todo-form');
 const input = $id('todo-input');
@@ -39,6 +43,45 @@ function createNewItem(inputElement){
     }
   )
 };
+console.log(currentFilter)
+stateButtons.addEventListener('click', (e)=> {
+  // if(listItems.length === 0)return;
+  const activeItems = listItems.filter(element => element.completed === false);
+  const liElements = $$('.li')
+  const all = e.target.dataset.filter==='all';
+  const active = e.target.dataset.filter==='active';
+  const completed = e.target.dataset.filter==='completed';
+  const selectedBtn = e.target;
+  const addClassToSelectedBtn = (btn) => btn.classList.add('selected-btn')
+  currentBtn.forEach((btn) => btn.classList.remove('selected-btn'));
+
+  if(all){
+    addClassToSelectedBtn(selectedBtn);
+    changeFilter('all')
+    containsHideClass(liElements);
+  };
+  if(active){
+    addClassToSelectedBtn(selectedBtn);
+    changeFilter('active');
+    containsHideClass(liElements)
+  }
+  if(completed){
+    addClassToSelectedBtn(selectedBtn);
+    changeFilter('completed');
+    liElements.forEach((element) => {
+      if(element.classList.contains('show')){
+        element.classList.remove('show')
+      }
+    })
+  }
+})
+
+function containsHideClass(li){
+  li.forEach((li) => {
+      if(li.classList.contains('hide')){
+      li.classList.remove('hide');
+    }});
+}
 
 //Form
 form.addEventListener('submit', handleAddItem);
@@ -57,10 +100,10 @@ function handleAddItem(e){
 function addItem(){
   emptyList.style.display='none';
       createNewItem(input);
-
+      const visibilityClass = currentFilter === 'completed' ? 'hide' : 'show'
       const lastItem = listItems.length-1;
-      listContainer.prepend(addItemToList(listItems[lastItem].id, listItems[lastItem].text))
-      input.value = ''
+      listContainer.prepend(addItemToList(listItems[lastItem].id, listItems[lastItem].text, visibilityClass));
+      input.value = '';
 }
 
 listContainer.addEventListener('click', (e)=> {
@@ -76,6 +119,7 @@ listContainer.addEventListener('click', (e)=> {
 
   const li = e.target.closest('li');
   if(li){
+    // const lista = e.target.closest('li');
     const inputID = e.target.closest('li').id;
     const todoText = $(`span[data-text="${inputID}"]`);
     const customCheck = $(`span[data-check="${inputID}"]`);
@@ -89,48 +133,25 @@ listContainer.addEventListener('click', (e)=> {
     customCheck.classList.add('round-check');
     customCheckSVG.style.display = 'block';
     customCheck.classList.remove('round-hoverable');
+
+        console.log(li)
+//NO VAAAAAVVVVVAVAVAVVVAVA
+   } else if(completedState && currentFilter === 'completed'){
+    console.log('dwd')
+    li.classList.remove('show')
+    li.classList.add('hide');
    } else {
     todoText.classList.remove('completed');
     customCheck.classList.remove('round-check');
     customCheckSVG.style.display = 'none';
     customCheck.classList.add('round-hoverable');
+    li.classList.remove('hide');
+
+    console.log(li)
   }
-  };
+  return
+};
 });
-
-// listContainer.addEventListener('click', (e)=> {
-//   if(e.target.tagName === 'BUTTON'){
-//     const btnId = Number(e.target.dataset.id);
-//     const index = findIndexItem(btnId);
-//     if (index !== -1) listItems.splice(index, 1)
-//     e.target.closest('li').remove();
-//   console.log(listItems.length)
-//     if(listItems.length === 0)showEmptyListMessage();
-//     return
-//   };
-
-//   if(['LI', 'INPUT', 'LABEL', 'SPAN', 'SVG'].includes(e.target.tagName)){
-//     const inputID = e.target.closest('li').id;
-//     const todoText = $(`span[data-text="${inputID}"]`);
-//     const customCheck = $(`span[data-check="${inputID}"]`);
-//     const customCheckSVG = $(`svg[data-svg="${inputID}"]`)
-//     const index = findIndexItem(Number(inputID));
-//     changeCompletedState(inputID);
-//     const completedState = listItems[index].completed;
-
-//    if(completedState){
-//     todoText.classList.add('completed');
-//     customCheck.classList.add('round-check');
-//     customCheckSVG.style.display = 'block';
-//     customCheck.classList.remove('round-hoverable');
-//    } else {
-//     todoText.classList.remove('completed');
-//     customCheck.classList.remove('round-check');
-//     customCheckSVG.style.display = 'none';
-//     customCheck.classList.add('round-hoverable');
-//   }
-//   };
-// });
 
 listContainer.addEventListener('keydown', (e)=> {
   if(e.target.tagName === 'LI'){
@@ -154,9 +175,10 @@ function findIndexItem(targetId){
   return listItems.findIndex(element => element.id === targetId);
 }
 
-function addItemToList(id, text){
+function addItemToList(id, text, visibilityClass){
   const li = document.createElement('li');
   li.classList.add('li');
+  li.classList.add(visibilityClass);
   li.id = id;
   li.tabIndex = 0;
   li.innerHTML = `<label for="input-${id}" class="label-li">

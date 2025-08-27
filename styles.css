@@ -179,6 +179,14 @@
         font-weight: var(--fw-700);
     }
 
+    .state-buttons button:hover{
+        color: var(--text-primary);
+    }
+
+    .state-buttons .selected-btn{
+        color: var(--blue-500);
+    }
+
     .instructions p{
         font-size: var(--fs-lg);
         color: var(--text-secondary);
@@ -432,5 +440,13 @@
     .add-item-btn:hover svg{
         stroke: var(--text-primary);
         scale: 1.1;
+    }
+
+    .hide{
+        display: none;
+    }
+
+    .show{
+        display: flex;
     }
 }
