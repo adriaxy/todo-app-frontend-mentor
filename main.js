@@ -43,9 +43,10 @@ function createNewItem(inputElement){
     }
   )
 };
-console.log(currentFilter)
+
 stateButtons.addEventListener('click', (e)=> {
   if(listItems.length === 0){
+    currentBtn.forEach((btn) => btn.classList.remove('selected-btn'));
     alert('There is no items on the list :(');
     return
   };
@@ -60,31 +61,65 @@ stateButtons.addEventListener('click', (e)=> {
 
   if(all){
     addClassToSelectedBtn(selectedBtn);
-    changeFilter('all')
-    containsHideClass(liElements);
+    changeFilter('all');
+    liElements.forEach((li) => {
+      li.classList.remove('hide');
+      li.classList.add('show');
+    })
   };
   if(active){
     addClassToSelectedBtn(selectedBtn);
     changeFilter('active');
-    containsHideClass(liElements)
+    filterLiElements(liElements, false);
   }
   if(completed){
     addClassToSelectedBtn(selectedBtn);
     changeFilter('completed');
-    liElements.forEach((element) => {
-      if(element.classList.contains('show')){
-        element.classList.remove('show')
-      }
-    })
+    filterLiElements(liElements, true);
   }
 })
 
-function containsHideClass(li){
-  li.forEach((li) => {
-      if(li.classList.contains('hide')){
-      li.classList.remove('hide');
-    }});
+function filterLiElements(element, flag){
+  if(Array.isArray(element) || element instanceof NodeList){
+  element.forEach((li) => {
+      const id = Number(li.id)
+      const index = findIndexItem(id, 'id');
+      const completed = listItems[index].completed
+      if(completed === flag){
+        li.classList.add('show');
+        li.classList.remove('hide');
+      } else {
+        li.classList.add('hide');
+        li.classList.remove('show');
+      }
+    })}else {
+      const id = Number(element.id)
+      const index = findIndexItem(id, 'id');
+      const completed = listItems[index].completed
+      if(completed === flag){
+        element.classList.add('show');
+        element.classList.remove('hide');
+      } else {
+        element.classList.add('hide');
+        element.classList.remove('show');
+      }
+    }
 }
+
+// function filterLiElements(liElements, flag){
+//   liElements.forEach((li) => {
+//       const id = Number(li.id)
+//       const index = findIndexItem(id, 'id');
+//       const completed = listItems[index].completed
+//       if(completed === flag){
+//         li.classList.add('show');
+//         li.classList.remove('hide');
+//       } else {
+//         li.classList.add('hide');
+//         li.classList.remove('show');
+//       }
+//     })
+// }
 
 //Form
 form.addEventListener('submit', handleAddItem);
@@ -112,10 +147,9 @@ function addItem(){
 listContainer.addEventListener('click', (e)=> {
   if(e.target.closest('button')){
     const btnId = Number(e.target.dataset.id);
-    const index = findIndexItem(btnId);
+    const index = findIndexItem(btnId, 'id');
     if (index !== -1) listItems.splice(index, 1)
     e.target.closest('li').remove();
-  console.log(listItems.length)
     if(listItems.length === 0)showEmptyListMessage();
     return
   };
@@ -127,7 +161,7 @@ listContainer.addEventListener('click', (e)=> {
     const todoText = $(`span[data-text="${inputID}"]`);
     const customCheck = $(`span[data-check="${inputID}"]`);
     const customCheckSVG = $(`svg[data-svg="${inputID}"]`)
-    const index = findIndexItem(Number(inputID));
+    const index = findIndexItem(Number(inputID), 'id');
     changeCompletedState(inputID);
     const completedState = listItems[index].completed;
 
@@ -136,22 +170,19 @@ listContainer.addEventListener('click', (e)=> {
     customCheck.classList.add('round-check');
     customCheckSVG.style.display = 'block';
     customCheck.classList.remove('round-hoverable');
-
-        console.log(li)
-//NO VAAAAAVVVVVAVAVAVVVAVA
-   } else if(completedState && currentFilter === 'completed'){
-    console.log('dwd')
-    li.classList.remove('show')
-    li.classList.add('hide');
+    if(currentFilter === 'active'){
+      filterLiElements(li, false);
+    }
    } else {
     todoText.classList.remove('completed');
     customCheck.classList.remove('round-check');
     customCheckSVG.style.display = 'none';
     customCheck.classList.add('round-hoverable');
     li.classList.remove('hide');
-
-    console.log(li)
-  }
+   }
+   if(completedState && currentFilter === modes.completed){
+   }
+    // console.log(li)
   return
 };
 });
@@ -167,15 +198,15 @@ listContainer.addEventListener('keydown', (e)=> {
 
 function changeCompletedState(id){
   const liId = Number(id);
-  const index = findIndexItem(liId);
+  const index = findIndexItem(liId, 'id');
   const result = index !== -1 
     ? listItems[index].completed = !listItems[index].completed 
     : 'index not found';
   return result;
 }
 
-function findIndexItem(targetId){
-  return listItems.findIndex(element => element.id === targetId);
+function findIndexItem(targetValue, key){
+  return listItems.findIndex(element => element[key] === targetValue);
 }
 
 function addItemToList(id, text, visibilityClass){
