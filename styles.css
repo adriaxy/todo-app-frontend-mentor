@@ -284,7 +284,7 @@
         background-color: var(--white-black);
         margin-top: var(--mt);
         background-color: var(--white-black);
-        padding: 10px var(--py);
+        padding: 10px 0px 10px var(--py);
     }
 
     .round{
@@ -431,6 +431,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .add-item-btn{
+        width: 60px;
     }
 
     .add-item-btn svg{
