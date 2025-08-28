@@ -80,6 +80,7 @@ stateButtons.addEventListener('click', (e)=> {
     changeFilter('completed');
     filterLiElements(liElements, true);
   }
+  itemsLeft();
 })
 
 function filterLiElements(element, flag){
@@ -143,15 +144,35 @@ function addItem(){
 }
 
 listContainer.addEventListener('click', (e)=> {
-  if(e.target.closest('button')){
-    const btnId = Number(e.target.dataset.id);
-    const index = findIndexItem(btnId, 'id');
-    if (index !== -1) listItems.splice(index, 1)
-    e.target.closest('li').remove();
-    if(listItems.length === 0)showEmptyListMessage();
-    itemsLeft();
-    return
-  };
+  if(listItems.length === 0)return;
+  // if(e.target.closest('button')){
+  //   console.log(listItems)
+  //   console.log(e.target)
+  //   const btnId = Number(e.target.dataset.id);
+  //   console.log(btnId)
+  //   const index = findIndexItem(btnId, 'id');
+  //   console.log(index)
+  //   if (index !== -1) listItems.splice(index, 1)
+  //   e.target.closest('li').remove();
+  //   if(listItems.length === 0)showEmptyListMessage();
+  //       console.log(listItems)
+
+  //   itemsLeft();
+  //   return
+  // };
+
+  const btn = e.target.closest('button');
+if (btn) {
+  const li = btn.closest('li');
+  if (!li) return; // seguridad
+  const id = Number(li.id); // <--- siempre válido
+  const index = findIndexItem(id, 'id');
+  if (index !== -1) listItems.splice(index, 1);
+  li.remove();
+  if(listItems.length === 0) showEmptyListMessage();
+  itemsLeft();
+  return;
+}
 
   const li = e.target.closest('li');
   if(li){
