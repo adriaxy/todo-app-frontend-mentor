@@ -54,6 +54,7 @@
   --bg-secondary: hsl(235, 24%, 19%);   /* Fondo secundario (navy-900) */
   --text-primary: hsl(234, 39%, 85%);    /* Texto principal (gray-600-dark) */
   --text-secondary: hsl(233, 14%, 35%); /* Texto secundario (purple-700) */
+  --accent: hsl(233, 14%, 35%);
   /* --accent: hsl(234, 39%, 85%); */
   --shadow: hsl(240, 20%, 3%);
   --accent-hover: hsl(236, 33%, 92%);   /* Hover para botones o links (purple-100-hover) */
@@ -438,7 +439,7 @@
     }
 
     .add-item-btn svg{
-        stroke: var(--text-secondary);
+        stroke: var(--text-primary);
         transition: scale var(--scale) ease;
     }
 
