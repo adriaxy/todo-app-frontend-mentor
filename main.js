@@ -66,7 +66,7 @@ stateButtons.addEventListener('click', (e)=> {
 
   if(all){
     addClassToSelectedBtn(selectedBtn);
-    changeFilter('all');
+    changeFilter(modes.all);
     liElements.forEach((li) => {
       li.classList.remove('hide');
       li.classList.add('show');
@@ -74,12 +74,12 @@ stateButtons.addEventListener('click', (e)=> {
   };
   if(active){
     addClassToSelectedBtn(selectedBtn);
-    changeFilter('active');
+    changeFilter(modes.active);
     filterLiElements(liElements, false);
   }
   if(completed){
     addClassToSelectedBtn(selectedBtn);
-    changeFilter('completed');
+    changeFilter(modes.completed);
     filterLiElements(liElements, true);
   }
   itemsLeft();
@@ -123,6 +123,33 @@ function filterLiElements(element, flag){
       }
     }
 }
+
+// function filterLiElements(element, flag){
+//   if(Array.isArray(element) || element instanceof NodeList){
+//   element.forEach((li) => {
+//       const id = Number(li.id)
+//       const index = findIndexItem(id, 'id');
+//       const completed = listItems[index].completed
+//       if(completed === flag){
+//         li.classList.add('show');
+//         li.classList.remove('hide');
+//       } else {
+//         li.classList.add('hide');
+//         li.classList.remove('show');
+//       }
+//     })}else {
+//       const id = Number(element.id)
+//       const index = findIndexItem(id, 'id');
+//       const completed = listItems[index].completed
+//       if(completed === flag){
+//         element.classList.add('show');
+//         element.classList.remove('hide');
+//       } else {
+//         element.classList.add('hide');
+//         element.classList.remove('show');
+//       }
+//     }
+// }
 
 //Form
 form.addEventListener('submit', (e)=> {
@@ -190,10 +217,6 @@ listContainer.addEventListener('click', (e)=> {
     customCheck.classList.add('round-check');
     customCheckSVG.style.display = 'block';
     customCheck.classList.remove('round-hoverable');
-    itemsLeft();
-    if(currentFilter === 'active'){
-      filterLiElements(li, false);
-    }
    } else {
     todoText.classList.remove('completed');
     customCheck.classList.remove('round-check');
@@ -202,6 +225,16 @@ listContainer.addEventListener('click', (e)=> {
     li.classList.remove('hide');
     itemsLeft();
    }
+
+   if(currentFilter === modes.active){
+    filterLiElements(li, false);
+  } else if(currentFilter === modes.completed){
+      filterLiElements(li, true);
+  } else { // all
+      li.classList.remove('hide');
+      li.classList.add('show');
+  }
+
   return
 };
 });
