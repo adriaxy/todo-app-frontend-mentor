@@ -19,7 +19,10 @@ const btnDelete = $('.delete');
 let currentFilter = 'all';
 const changeFilter = (filter) => currentFilter = (filter);
 const currentBtn = $$('.btn-state');
+const itemsLeftText = $('.items-left');
 
+//flags
+let isDeletedVisible = null;
 
 const form = $('.todo-form');
 const input = $id('todo-input');
@@ -51,7 +54,7 @@ stateButtons.addEventListener('click', (e)=> {
     return
   };
   const activeItems = listItems.filter(element => element.completed === false);
-  const liElements = $$('.li')
+  const liElements = $$('.li');
   const all = e.target.dataset.filter==='all';
   const active = e.target.dataset.filter==='active';
   const completed = e.target.dataset.filter==='completed';
@@ -106,41 +109,36 @@ function filterLiElements(element, flag){
     }
 }
 
-// function filterLiElements(liElements, flag){
-//   liElements.forEach((li) => {
-//       const id = Number(li.id)
-//       const index = findIndexItem(id, 'id');
-//       const completed = listItems[index].completed
-//       if(completed === flag){
-//         li.classList.add('show');
-//         li.classList.remove('hide');
-//       } else {
-//         li.classList.add('hide');
-//         li.classList.remove('show');
-//       }
-//     })
-// }
-
 //Form
-form.addEventListener('submit', handleAddItem);
+form.addEventListener('submit', (e)=> {
+  handleAddItem(e);
+});
 
-addItemBtn.addEventListener('click', handleAddItem);
+addItemBtn.addEventListener('click', (e)=> {
+  handleAddItem(e);
+});
 
 function handleAddItem(e){
   e.preventDefault();
+
   if(!input.value){
     alert('Please, write a new task');
     return
-  }; 
+  };
   addItem();
+  itemsLeft(); 
+  // updateDeleteButtonVisibility();
+  // isDeletedVisible = null;
 }
+
 
 function addItem(){
   emptyList.style.display='none';
       createNewItem(input);
       const visibilityClass = currentFilter === 'completed' ? 'hide' : 'show'
       const lastItem = listItems.length-1;
-      listContainer.prepend(addItemToList(listItems[lastItem].id, listItems[lastItem].text, visibilityClass));
+      const newLi = addItemToList(listItems[lastItem].id, listItems[lastItem].text, visibilityClass)
+      listContainer.prepend(newLi);
       input.value = '';
 }
 
@@ -151,6 +149,7 @@ listContainer.addEventListener('click', (e)=> {
     if (index !== -1) listItems.splice(index, 1)
     e.target.closest('li').remove();
     if(listItems.length === 0)showEmptyListMessage();
+    itemsLeft();
     return
   };
 
@@ -166,10 +165,12 @@ listContainer.addEventListener('click', (e)=> {
     const completedState = listItems[index].completed;
 
    if(completedState){
+    itemsLeft();
     todoText.classList.add('completed');
     customCheck.classList.add('round-check');
     customCheckSVG.style.display = 'block';
     customCheck.classList.remove('round-hoverable');
+    itemsLeft();
     if(currentFilter === 'active'){
       filterLiElements(li, false);
     }
@@ -179,10 +180,8 @@ listContainer.addEventListener('click', (e)=> {
     customCheckSVG.style.display = 'none';
     customCheck.classList.add('round-hoverable');
     li.classList.remove('hide');
+    itemsLeft();
    }
-   if(completedState && currentFilter === modes.completed){
-   }
-    // console.log(li)
   return
 };
 });
@@ -215,6 +214,7 @@ function addItemToList(id, text, visibilityClass){
   li.classList.add(visibilityClass);
   li.id = id;
   li.tabIndex = 0;
+
   li.innerHTML = `<label for="input-${id}" class="label-li">
         <input type="checkbox" data-input="${id}">
         <span class="custom-check round round-hoverable" data-check="${id}" aria-hidden="true">
@@ -223,10 +223,10 @@ function addItemToList(id, text, visibilityClass){
         <span class="todo-text" data-text="${id}">${text}</span>
       </label>
       <button type="button" class="delete" data-id="${id}">
-      </button>`
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="#494C6B" fill-rule="evenodd" d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z"/></svg>
+      </button>`;
   return li
 }
-
 
 //Theme button
 btnTheme.addEventListener('click', (e)=> {
@@ -260,21 +260,43 @@ function repositionDiv() {
     interactiveSection.removeChild(divFooter);
     divSummary.insertBefore(stateButtons, divSummary.children[1]);
   }
+};
+
+function updateDeleteButtonVisibility(){
+  const deleteBtn = $$('.delete');
+  const shouldBeVisible = listItems.length !== 0 && window.innerWidth < 590;
+
+  if(shouldBeVisible === isDeletedVisible)return; 
+
+  deleteBtn.forEach(btn => {
+    btn.style.pointerEvents = shouldBeVisible ? 'auto' : 'none';
+    btn.style.opacity = shouldBeVisible ? '1 ' : '0';
+  })
+  isDeletedVisible = shouldBeVisible;
 }
 
-
-window.addEventListener('DOMContentLoaded', repositionDiv)
-window.addEventListener('resize', repositionDiv);
-
+window.addEventListener('DOMContentLoaded', ()=> {
+  repositionDiv();
+  // updateDeleteButtonVisibility();
+})
+window.addEventListener('resize', ()=> {
+  repositionDiv();
+  // updateDeleteButtonVisibility();
+  if(listItems.length === 0)return;
+  
+});
 
 function toggleTheme() {
   const current = body.dataset.theme;
   body.dataset.theme = current === 'dark' ? 'light' : 'dark';
 }
 
-
-
-
-
-
-
+function itemsLeft(){
+  let counter = 0;
+  listItems.forEach((item) => {
+    if(!item.completed){
+    counter++; 
+    }
+  });
+  itemsLeftText.textContent = counter
+}

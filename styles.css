@@ -341,7 +341,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: var(--px) var(--py);
+        padding-left: var(--py);
     }
 
     ul li,
@@ -426,10 +426,11 @@
     }
 
     .delete{
-        width: 17px;
-        height: 17px;
-        background: url(./images/icon-cross.svg) no-repeat center;
-        background-size: cover;
+        height: 60px;
+        width: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .add-item-btn svg{
