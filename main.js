@@ -37,7 +37,7 @@ let modes = {
     completed: 'completed'
   }
 
-const listItems = []
+let listItems = []
 
 function createNewItem(inputElement){
   listItems.push(
@@ -87,7 +87,14 @@ stateButtons.addEventListener('click', (e)=> {
 
 clearCompleted.addEventListener('click', ()=> {
   if(isEmpty())return;
-  console.log('clic')
+    console.log(listItems)
+  const liElements = $$('li');
+  listItems = listItems.filter(item => !item.completed);
+  liElements.forEach(li => {
+    const liId = Number(li.id);
+    if(!listItems.find(item => item.id === liId)) li.remove();
+  })
+  console.log(listItems)
 })
 
 function filterLiElements(element, flag){
