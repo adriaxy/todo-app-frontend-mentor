@@ -12,6 +12,8 @@ divFooter.className = 'div-footer';
 const isEmpty = () => listItems.length === 0; 
 const btnTheme = $('.btn-theme');
 const body = $('body');
+// const current = body.dataset.theme;
+const current = () => body.dataset.theme;
 const darkBtn = $('.dark-theme-svg')
 const lightBtn = $('.light-theme-svg');
 let isAnimating = false;
@@ -299,6 +301,11 @@ btnTheme.addEventListener('click', (e)=> {
     active.classList.add('hide-above');
     isAnimating = false;
   }, {once:true});
+
+  if(!isEmpty()){
+    const buttons = $$('.delete');
+    buttons.forEach(btn => btn.classList.toggle('delete-dark'));
+  }
 });
 
 
@@ -338,8 +345,8 @@ window.addEventListener('resize', ()=> {
 });
 
 function toggleTheme() {
-  const current = body.dataset.theme;
-  body.dataset.theme = current === 'dark' ? 'light' : 'dark';
+  console.log(current())
+  body.dataset.theme = current() === 'dark' ? 'light' : 'dark';
 }
 
 function itemsLeft(){

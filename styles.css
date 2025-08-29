@@ -362,12 +362,13 @@
         display: none;
     }
 
+
     .todo-summary{
         display: flex;
         justify-content: space-between;
         padding: var(--px) var(--py);
         align-items: center;
-    }
+    } 
 
     .state-buttons{
         display: flex;
@@ -432,6 +433,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .delete-dark:hover{
+        --accent: hsl(240, 20%, 92%); 
+    }
+
+    .delete:hover{
+        --accent: hsl(240, 7%, 60%); 
     }
 
     .add-item-btn{
