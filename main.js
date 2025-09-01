@@ -42,7 +42,7 @@ let modes = {
 let listItems = []
 
 function createNewItem(inputElement){
-  listItems.push(
+  listItems.unshift(
     {
       text: inputElement.value,
       completed: false,
@@ -181,8 +181,8 @@ function addItem(){
   emptyList.style.display='none';
       createNewItem(input);
       const visibilityClass = currentFilter === 'completed' ? 'hide' : 'show'
-      const lastItem = listItems.length-1;
-      const newLi = addItemToList(listItems[lastItem].id, listItems[lastItem].text, visibilityClass)
+      // const lastItem = listItems.length-1;
+      const newLi = addItemToList(listItems[0].id, listItems[0].text, visibilityClass)
       listContainer.prepend(newLi);
       input.value = '';
 }
@@ -299,7 +299,7 @@ function addItemToList(id, text, visibilityClass){
         const data = e.dataTransfer.getData('text');
         const source = document.getElementById(data);
         const targetLi = e.target.closest('li');
-        const targetId = targetLi.id; 
+        const targetId = targetLi.id;
   
         if(!targetLi || targetLi === source) return; 
         const draggedElementIndex = listItems.findIndex(item => item.id === Number(source.id));
@@ -309,9 +309,25 @@ function addItemToList(id, text, visibilityClass){
         const midpoint = targetLiMeasures.top + targetLiMeasures.height / 2;
         
         if(e.clientY < midpoint){
+          const liElementOnListItems = listItems[draggedElementIndex];
+          listItems.splice(draggedElementIndex, 1);
           listContainer.insertBefore(source, targetLi);
+          const liElements = $$('li');
+          const liElementsArray = Array.from(liElements);
+          const newLiIndex = liElementsArray.findIndex(liElement => liElement.id === source.id);
+          console.log(newLiIndex)
+          listItems.splice(newLiIndex, 0, liElementOnListItems);
+          console.log(listItems)
         } else{
-          listContainer.insertBefore(source, targetLi.nextSibling)
+          const liElementOnListItems = listItems[draggedElementIndex];
+          listItems.splice(draggedElementIndex, 1);
+          listContainer.insertBefore(source, targetLi.nextSibling);
+          const liElements = $$('li');
+          const liElementsArray = Array.from(liElements);
+          const newLiIndex = liElementsArray.findIndex(liElement => liElement.id === source.id);
+          console.log(newLiIndex)
+          listItems.splice(newLiIndex, 0, liElementOnListItems);
+          console.log(listItems)
         }
       })
 
