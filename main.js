@@ -78,6 +78,7 @@ stateButtons.addEventListener('click', (e)=> {
     addClassToSelectedBtn(selectedBtn);
     changeFilter(modes.active);
     filterLiElements(liElements, false);
+    console.log(listItems)
   }
   if(completed){
     addClassToSelectedBtn(selectedBtn);
@@ -267,7 +268,8 @@ function addItemToList(id, text, visibilityClass){
   const li = document.createElement('li');
   li.classList.add('li');
   li.classList.add(visibilityClass);
-  li.id = id;
+  li.id = id
+  li.setAttribute('draggable', 'true');
   li.tabIndex = 0;
 
   li.innerHTML = `<label for="input-${id}" class="label-li">
@@ -280,10 +282,44 @@ function addItemToList(id, text, visibilityClass){
       <button type="button" class="delete" data-id="${id}">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="var(--accent)" fill-rule="evenodd" d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z"/></svg>
       </button>`;
-  return li
-}
 
-//Theme button
+      li.addEventListener('dragstart', (e)=>{
+        e.dataTransfer.clearData();
+        e.dataTransfer.setData('text/plain', e.target.id);
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      li.addEventListener('dragover', (e)=> {
+        e.preventDefault();
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      li.addEventListener('drop', (e)=>{
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text');
+        const source = document.getElementById(data);
+        const targetLi = e.target.closest('li');
+        const targetId = targetLi.id; 
+  
+        if(!targetLi || targetLi === source) return; 
+        const draggedElementIndex = listItems.findIndex(item => item.id === Number(source.id));
+        // const dropElementIndex = listItems.findIndex(item => item.id === Number(targetId));
+
+        const targetLiMeasures = targetLi.getBoundingClientRect();
+        const midpoint = targetLiMeasures.top + targetLiMeasures.height / 2;
+        
+        if(e.clientY < midpoint){
+          listContainer.insertBefore(source, targetLi);
+        } else{
+          listContainer.insertBefore(source, targetLi.nextSibling)
+        }
+      })
+
+      return li;
+    }
+
+
+
 btnTheme.addEventListener('click', (e)=> {
   e.preventDefault();
   toggleTheme();
@@ -345,7 +381,6 @@ window.addEventListener('resize', ()=> {
 });
 
 function toggleTheme() {
-  console.log(current())
   body.dataset.theme = current() === 'dark' ? 'light' : 'dark';
 }
 
