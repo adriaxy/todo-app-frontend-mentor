@@ -2,37 +2,37 @@ const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
 const $id = id => document.getElementById(id);
 
-
+const body = $('body');
+const form = $('.todo-form');
+const input = $id('todo-input');
+const emptyList = $('.empty-list');
+const listContainer = $('.list-container');
 const divSummary = $('.todo-summary');
 const stateButtons = $('.state-buttons');
 const interactiveSection = $('.interactive-content');
 const divFooter = document.createElement('div');
 divFooter.className = 'div-footer';
+const itemsLeftText = $('.items-left');
 
-const isEmpty = () => listItems.length === 0; 
+// Buttons
 const btnTheme = $('.btn-theme');
-const body = $('body');
-// const current = body.dataset.theme;
-const current = () => body.dataset.theme;
 const darkBtn = $('.dark-theme-svg')
 const lightBtn = $('.light-theme-svg');
-let isAnimating = false;
 const addItemBtn = $('.add-item-btn');
 const btnDelete = $('.delete');
-let currentFilter = 'all';
-const changeFilter = (filter) => currentFilter = (filter);
 const currentBtn = $$('.btn-state');
-const itemsLeftText = $('.items-left');
 const clearCompleted = $('.btn-clear-completed');
 
-//flags
+// Flags
 let isDeletedVisible = null;
+let isAnimating = false;
+let currentFilter = 'all';
 
-const form = $('.todo-form');
-const input = $id('todo-input');
-const emptyList = $('.empty-list');
+// Functions
+const isEmpty = () => listItems.length === 0; 
+const current = () => body.dataset.theme;
+const changeFilter = (filter) => currentFilter = (filter);
 const showEmptyListMessage = () => emptyList.style.display = 'flex';
-const listContainer = $('.list-container');
 let modes = {
     all: 'all',
     active: 'active',
@@ -126,33 +126,6 @@ function filterLiElements(element, flag){
       }
     }
 }
-
-// function filterLiElements(element, flag){
-//   if(Array.isArray(element) || element instanceof NodeList){
-//   element.forEach((li) => {
-//       const id = Number(li.id)
-//       const index = findIndexItem(id, 'id');
-//       const completed = listItems[index].completed
-//       if(completed === flag){
-//         li.classList.add('show');
-//         li.classList.remove('hide');
-//       } else {
-//         li.classList.add('hide');
-//         li.classList.remove('show');
-//       }
-//     })}else {
-//       const id = Number(element.id)
-//       const index = findIndexItem(id, 'id');
-//       const completed = listItems[index].completed
-//       if(completed === flag){
-//         element.classList.add('show');
-//         element.classList.remove('hide');
-//       } else {
-//         element.classList.add('hide');
-//         element.classList.remove('show');
-//       }
-//     }
-// }
 
 //Form
 form.addEventListener('submit', (e)=> {
