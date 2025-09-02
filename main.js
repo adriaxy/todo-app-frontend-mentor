@@ -1,3 +1,7 @@
+import {
+  countActiveItems
+} from './helpers.js';
+
 const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
 const $id = id => document.getElementById(id);
@@ -33,23 +37,18 @@ const isEmpty = () => listItems.length === 0;
 const current = () => body.dataset.theme;
 const changeFilter = (filter) => currentFilter = (filter);
 const showEmptyListMessage = () => emptyList.style.display = 'flex';
+
+// Display modes
 let modes = {
     all: 'all',
     active: 'active',
     completed: 'completed'
   }
 
+// Todos
 let listItems = []
 
-function createNewItem(inputElement){
-  listItems.unshift(
-    {
-      text: inputElement.value,
-      completed: false,
-      id: Date.now()
-    }
-  )
-};
+
 
 stateButtons.addEventListener('click', (e)=> {
   if(isEmpty()){
@@ -144,11 +143,18 @@ function handleAddItem(e){
     return
   };
   addItem();
-  itemsLeft(); 
-  // updateDeleteButtonVisibility();
-  // isDeletedVisible = null;
+  updateItemsLeftUI(itemsLeftText, listItems)
 }
 
+function createNewItem(inputElement){
+  listItems.unshift(
+    {
+      text: inputElement.value,
+      completed: false,
+      id: Date.now()
+    }
+  )
+};
 
 function addItem(){
   emptyList.style.display='none';
@@ -372,6 +378,10 @@ function toggleTheme() {
   body.dataset.theme = current() === 'dark' ? 'light' : 'dark';
 }
 
+function updateItemsLeftUI(text, list){
+  text.textContent = countActiveItems(list);
+}
+
 function itemsLeft(){
   let counter = 0;
   listItems.forEach((item) => {
@@ -381,3 +391,4 @@ function itemsLeft(){
   });
   itemsLeftText.textContent = counter
 }
+
