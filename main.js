@@ -302,33 +302,64 @@ function addItemToList(id, text, visibilityClass){
         const targetId = targetLi.id;
   
         if(!targetLi || targetLi === source) return; 
-        const draggedElementIndex = listItems.findIndex(item => item.id === Number(source.id));
+        // const draggedElementIndex = listItems.findIndex(item => item.id === Number(source.id));
+        const draggedElementIndex = findIndexItem(Number(source.id), 'id');
         // const dropElementIndex = listItems.findIndex(item => item.id === Number(targetId));
 
         const targetLiMeasures = targetLi.getBoundingClientRect();
         const midpoint = targetLiMeasures.top + targetLiMeasures.height / 2;
+
+        
         
         if(e.clientY < midpoint){
           const liElementOnListItems = listItems[draggedElementIndex];
+          const targetIndex = findIndexItem(Number(targetLi.id), 'id');
           listItems.splice(draggedElementIndex, 1);
+          if(draggedElementIndex < targetIndex){
+            listItems.splice(targetIndex -1, 0, liElementOnListItems);
+          } else {
+            listItems.splice(targetIndex, 0, liElementOnListItems);
+          }
           listContainer.insertBefore(source, targetLi);
-          const liElements = $$('li');
-          const liElementsArray = Array.from(liElements);
-          const newLiIndex = liElementsArray.findIndex(liElement => liElement.id === source.id);
-          console.log(newLiIndex)
-          listItems.splice(newLiIndex, 0, liElementOnListItems);
+          console.log(targetIndex)
+          console.log('primer if')
           console.log(listItems)
         } else{
           const liElementOnListItems = listItems[draggedElementIndex];
+          const targetIndex = findIndexItem(Number(targetLi.id), 'id');
           listItems.splice(draggedElementIndex, 1);
+          if(draggedElementIndex < targetIndex){
+            listItems.splice(targetIndex, 0, liElementOnListItems);
+          } else {
+            listItems.splice(targetIndex +1, 0, liElementOnListItems);
+          }
           listContainer.insertBefore(source, targetLi.nextSibling);
-          const liElements = $$('li');
-          const liElementsArray = Array.from(liElements);
-          const newLiIndex = liElementsArray.findIndex(liElement => liElement.id === source.id);
-          console.log(newLiIndex)
-          listItems.splice(newLiIndex, 0, liElementOnListItems);
+          console.log('segundo if')
           console.log(listItems)
+          console.log(targetIndex)
         }
+        
+        // if(e.clientY < midpoint){
+        //   const liElementOnListItems = listItems[draggedElementIndex];
+        //   listItems.splice(draggedElementIndex, 1);
+        //   listContainer.insertBefore(source, targetLi);
+        //   const liElements = $$('li');
+        //   const liElementsArray = Array.from(liElements);
+        //   const newLiIndex = liElementsArray.findIndex(liElement => liElement.id === source.id);
+        //   console.log(newLiIndex)
+        //   listItems.splice(newLiIndex, 0, liElementOnListItems);
+        //   console.log(listItems)
+        // } else{
+        //   const liElementOnListItems = listItems[draggedElementIndex];
+        //   listItems.splice(draggedElementIndex, 1);
+        //   listContainer.insertBefore(source, targetLi.nextSibling);
+        //   const liElements = $$('li');
+        //   const liElementsArray = Array.from(liElements);
+        //   const newLiIndex = liElementsArray.findIndex(liElement => liElement.id === source.id);
+        //   console.log(newLiIndex)
+        //   listItems.splice(newLiIndex, 0, liElementOnListItems);
+        //   console.log(listItems)
+        // }
       })
 
       return li;
