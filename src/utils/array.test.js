@@ -1,4 +1,4 @@
-import { countActiveItems, findIndexItem} from './array.js';  // importamos la función a testear
+import { countActiveItems, findIndexItem} from './array.js';  
 
 describe('count active items', () => {
     const list1 = [
