@@ -38,8 +38,8 @@ const current = () => body.dataset.theme;
 const changeFilter = (filter) => currentFilter = (filter);
 const showEmptyListMessage = () => emptyList.style.display = 'flex';
 
-// Display modes
-let modes = {
+// Display MODES
+let MODES = {
     all: 'all',
     active: 'active',
     completed: 'completed'
@@ -48,44 +48,59 @@ let modes = {
 // Todos
 let listItems = []
 
-
-
 stateButtons.addEventListener('click', (e)=> {
+  const removeClassSelected = () => currentBtn.forEach((btn) => btn.classList.remove('selected-btn'));
+
   if(isEmpty()){
-    currentBtn.forEach((btn) => btn.classList.remove('selected-btn'));
+    removeClassSelected();
     alert('There is no items on the list :(');
     return
   };
-  const activeItems = listItems.filter(element => element.completed === false);
-  const liElements = $$('.li');
-  const all = e.target.dataset.filter==='all';
-  const active = e.target.dataset.filter==='active';
-  const completed = e.target.dataset.filter==='completed';
-  const selectedBtn = e.target;
-  const addClassToSelectedBtn = (btn) => btn.classList.add('selected-btn')
-  currentBtn.forEach((btn) => btn.classList.remove('selected-btn'));
 
-  if(all){
-    addClassToSelectedBtn(selectedBtn);
-    changeFilter(modes.all);
-    liElements.forEach((li) => {
-      li.classList.remove('hide');
-      li.classList.add('show');
-    })
-  };
-  if(active){
-    addClassToSelectedBtn(selectedBtn);
-    changeFilter(modes.active);
-    filterLiElements(liElements, false);
-    console.log(listItems)
+  const liElements = Array.from($$('.li'));
+  const selectedBtn = e.target;
+  const filter = selectedBtn.dataset.filter;
+  removeClassSelected();
+  selectedBtn.classList.add('selected-btn');
+
+  switch(filter){
+    case MODES.all: 
+      changeFilter(filter);
+      liElements.forEach((li) => {
+        li.classList.remove('hide');
+        li.classList.add('show');
+      });
+    break;
+
+    case MODES.active:
+      changeFilter(filter);
+      liElements.forEach(li => changeClassVisibility(li, listItems, false));
+    break;
+
+    case MODES.completed:
+      changeFilter(filter);
+      liElements.forEach(li => changeClassVisibility(li, listItems, true));
+    break;
+
+    default:
+      console.log('No filter available')
   }
-  if(completed){
-    addClassToSelectedBtn(selectedBtn);
-    changeFilter(modes.completed);
-    filterLiElements(liElements, true);
-  }
-  itemsLeft();
+
+  updateItemsLeftUI(itemsLeftText, listItems);;
 });
+
+function changeClassVisibility(element, list, flag){
+      const id = Number(element.id)
+      const index = getIndexByKey(list, id, 'id');
+      const completed = list[index].completed
+      if(completed === flag){
+        element.classList.add('show');
+        element.classList.remove('hide');
+      } else {
+        element.classList.add('hide');
+        element.classList.remove('show');
+      }
+}
 
 clearCompleted.addEventListener('click', ()=> {
   if(isEmpty())return;
@@ -99,32 +114,6 @@ clearCompleted.addEventListener('click', ()=> {
   console.log(listItems)
 })
 
-function filterLiElements(element, flag){
-  if(Array.isArray(element) || element instanceof NodeList){
-  element.forEach((li) => {
-      const id = Number(li.id)
-      const index = findIndexItem(id, 'id');
-      const completed = listItems[index].completed
-      if(completed === flag){
-        li.classList.add('show');
-        li.classList.remove('hide');
-      } else {
-        li.classList.add('hide');
-        li.classList.remove('show');
-      }
-    })}else {
-      const id = Number(element.id)
-      const index = findIndexItem(id, 'id');
-      const completed = listItems[index].completed
-      if(completed === flag){
-        element.classList.add('show');
-        element.classList.remove('hide');
-      } else {
-        element.classList.add('hide');
-        element.classList.remove('show');
-      }
-    }
-}
 
 //Form
 form.addEventListener('submit', (e)=> {
@@ -143,7 +132,7 @@ function handleAddItem(e){
     return
   };
   addItem();
-  updateItemsLeftUI(itemsLeftText, listItems)
+  updateItemsLeftUI(itemsLeftText, listItems);
 }
 
 function createNewItem(inputElement){
@@ -178,7 +167,7 @@ listContainer.addEventListener('click', (e)=> {
     if (index !== -1) listItems.splice(index, 1);
     li.remove();
     if(isEmpty()) showEmptyListMessage();
-    itemsLeft();
+    updateItemsLeftUI(itemsLeftText, listItems);;
     return;
   }
 
@@ -194,7 +183,7 @@ listContainer.addEventListener('click', (e)=> {
     const completedState = listItems[index].completed;
 
    if(completedState){
-    itemsLeft();
+    updateItemsLeftUI(itemsLeftText, listItems);
     todoText.classList.add('completed');
     customCheck.classList.add('round-check');
     customCheckSVG.style.display = 'block';
@@ -205,18 +194,17 @@ listContainer.addEventListener('click', (e)=> {
     customCheckSVG.style.display = 'none';
     customCheck.classList.add('round-hoverable');
     li.classList.remove('hide');
-    itemsLeft();
+    updateItemsLeftUI(itemsLeftText, listItems);
    }
 
-   if(currentFilter === modes.active){
-    filterLiElements(li, false);
-  } else if(currentFilter === modes.completed){
-      filterLiElements(li, true);
+   if(currentFilter === MODES.active){
+    changeClassVisibility(li, listItems, false);
+  } else if(currentFilter === MODES.completed){
+    changeClassVisibility(li, listItems, true);
   } else { // all
       li.classList.remove('hide');
       li.classList.add('show');
   }
-
   return
 };
 });
@@ -237,6 +225,10 @@ function changeCompletedState(id){
     ? listItems[index].completed = !listItems[index].completed 
     : 'index not found';
   return result;
+}
+
+function getIndexByKey(list,targetValue, key){
+  return list.findIndex(element => element[key] === targetValue);
 }
 
 function findIndexItem(targetValue, key){
@@ -382,13 +374,4 @@ function updateItemsLeftUI(text, list){
   text.textContent = countActiveItems(list);
 }
 
-function itemsLeft(){
-  let counter = 0;
-  listItems.forEach((item) => {
-    if(!item.completed){
-    counter++; 
-    }
-  });
-  itemsLeftText.textContent = counter
-}
 
