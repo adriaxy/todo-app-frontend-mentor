@@ -1,13 +1,12 @@
 import {
-  countActiveItems,
   findIndexItem
-} from './helpers.js';
+} from './utils/array.js';
 
 import {
   changeClassVisibility,
   updateItemsLeftUI,
   createNewItem
-} from './domHelpers.js';
+} from './ui/dom.js';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
@@ -275,9 +274,6 @@ function changeCompletedState(id){
   return result;
 }
 
-
-
-
 btnTheme.addEventListener('click', (e)=> {
   e.preventDefault();
   toggleTheme();
@@ -302,7 +298,6 @@ btnTheme.addEventListener('click', (e)=> {
   }
 });
 
-
 //Interactive section div repositioning
 function repositionDiv() {
   if (window.innerWidth < 590) {
@@ -315,19 +310,6 @@ function repositionDiv() {
     divSummary.insertBefore(stateButtons, divSummary.children[1]);
   }
 };
-
-function updateDeleteButtonVisibility(){
-  const deleteBtn = $$('.delete');
-  const shouldBeVisible = listItems.length !== 0 && window.innerWidth < 590;
-
-  if(shouldBeVisible === isDeletedVisible)return; 
-
-  deleteBtn.forEach(btn => {
-    btn.style.pointerEvents = shouldBeVisible ? 'auto' : 'none';
-    btn.style.opacity = shouldBeVisible ? '1 ' : '0';
-  })
-  isDeletedVisible = shouldBeVisible;
-}
 
 window.addEventListener('DOMContentLoaded', ()=> {
   repositionDiv();

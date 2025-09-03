@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Josefin Sans";
-    src: url(./assets/JosefinSans-VariableFont_wght.woff2) format('woff2');
+    src: url(../../assets/JosefinSans-VariableFont_wght.woff2) format('woff2');
     font-style: normal;
     font-weight: 400 700;
     font-display: swap;
@@ -23,7 +23,7 @@
   --border: hsla(237, 9%, 61%, 0.456);  /* Texto secundario (gray-600-light) */
   --accent: hsl(234, 39%, 85%);         /* Color de acento (purple-300-light) */
   --shadow: hsl(234, 39%, 85%);         /* Color de acento (purple-300-light) */
-  --bg-image-url: url('./images/bg-desktop-light.jpg');
+  --bg-image-url: url('../../images/bg-desktop-light.jpg');
 
   /* font size */
   --fs-input: 0.90rem;
@@ -62,7 +62,7 @@
   --accent-hover: hsl(236, 33%, 92%);   /* Hover para botones o links (purple-100-hover) */
   --accent-dark: hsl(235, 16%, 43%);    /* Variante de acento más oscuro (purple-600) */
   --accent-darker: hsl(237, 14%, 26%);  /* Variante de acento aún más oscuro (purple-800) */
-  --bg-image-url: url('./images/bg-desktop-dark.jpg');
+  --bg-image-url: url('../../images/bg-desktop-dark.jpg');
 }
 
 @layer reset{

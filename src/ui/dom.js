@@ -1,10 +1,11 @@
 import {
-    countActiveItems
-} from './helpers.js'
+    countActiveItems,
+    findIndexItem
+} from '../utils/array.js'
 
 export function changeClassVisibility(element, list, flag){
       const id = Number(element.id)
-      const index = getIndexByKey(list, id, 'id');
+      const index = findIndexItem(list, id, 'id');
       const completed = list[index].completed
       if(completed === flag){
         element.classList.add('show');
@@ -13,10 +14,6 @@ export function changeClassVisibility(element, list, flag){
         element.classList.add('hide');
         element.classList.remove('show');
       }
-}
-
-function getIndexByKey(list,targetValue, key){
-  return list.findIndex(element => element[key] === targetValue);
 }
 
 export function updateItemsLeftUI(text, list){
