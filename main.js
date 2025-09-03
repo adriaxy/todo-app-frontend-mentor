@@ -1,5 +1,6 @@
 import {
-  countActiveItems
+  countActiveItems,
+  findIndexItem
 } from './helpers.js';
 
 import {
@@ -130,11 +131,77 @@ function addItem(){
   emptyList.style.display='none';
   createNewItem(listItems, input);
   const visibilityClass = currentFilter === 'completed' ? 'hide' : 'show'
-  // const lastItem = listItems.length-1;
   const newLi = addItemToList(listItems[0].id, listItems[0].text, visibilityClass)
   listContainer.prepend(newLi);
   input.value = '';
 }
+
+
+function addItemToList(id, text, visibilityClass){
+  const li = document.createElement('li');
+  li.classList.add('li');
+  li.classList.add(visibilityClass);
+  li.id = id
+  li.setAttribute('draggable', 'true');
+  li.tabIndex = 0;
+
+  li.innerHTML = `<label for="input-${id}" class="label-li">
+        <input type="checkbox" data-input="${id}">
+        <span class="custom-check round round-hoverable" data-check="${id}" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9" data-svg="${id}" class="check-svg"><path fill="none" stroke="#fff" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>
+        </span>
+        <span class="todo-text" data-text="${id}">${text}</span>
+      </label>
+      <button type="button" class="delete" data-id="${id}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="var(--accent)" fill-rule="evenodd" d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z"/></svg>
+      </button>`;
+
+      li.addEventListener('dragstart', (e)=>{
+        e.dataTransfer.clearData();
+        e.dataTransfer.setData('text/plain', e.target.id);
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      li.addEventListener('dragover', (e)=> {
+        e.preventDefault();
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      li.addEventListener('drop', (e)=>{
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text');
+        const source = document.getElementById(data);
+        const targetLi = e.target.closest('li');
+        const targetId = targetLi.id;
+  
+        if(!targetLi || targetLi === source) return; 
+        const draggedElementIndex = findIndexItem(listItems, Number(source.id), 'id');
+
+        const targetLiMeasures = targetLi.getBoundingClientRect();
+        const midpoint = targetLiMeasures.top + targetLiMeasures.height / 2;
+        
+        if(e.clientY < midpoint){
+          const liElementOnListItems = listItems[draggedElementIndex];
+          const targetIndex = findIndexItem(listItems, Number(targetLi.id), 'id');
+          listItems.splice(draggedElementIndex, 1);
+          if(draggedElementIndex < targetIndex){
+            listItems.splice(targetIndex -1, 0, liElementOnListItems);
+            } else {
+            listItems.splice(targetIndex, 0, liElementOnListItems);
+            }
+          listContainer.insertBefore(source, targetLi);
+        } else{
+          const liElementOnListItems = listItems[draggedElementIndex];
+          const targetIndex = findIndexItem(listItems, Number(targetLi.id), 'id');
+          listItems.splice(draggedElementIndex, 1);
+          listItems.splice(targetIndex, 0, liElementOnListItems);
+          listContainer.insertBefore(source, targetLi.nextSibling);
+        }
+      })
+
+      return li;
+    }
+
 
 listContainer.addEventListener('click', (e)=> {
   if(isEmpty())return;
@@ -144,7 +211,7 @@ listContainer.addEventListener('click', (e)=> {
     const li = btn.closest('li');
     if (!li) return; 
     const id = Number(li.id);
-    const index = findIndexItem(id, 'id');
+    const index = findIndexItem(listItems, id, 'id');
     if (index !== -1) listItems.splice(index, 1);
     li.remove();
     if(isEmpty()) showEmptyListMessage();
@@ -159,7 +226,7 @@ listContainer.addEventListener('click', (e)=> {
     const todoText = $(`span[data-text="${inputID}"]`);
     const customCheck = $(`span[data-check="${inputID}"]`);
     const customCheckSVG = $(`svg[data-svg="${inputID}"]`)
-    const index = findIndexItem(Number(inputID), 'id');
+    const index = findIndexItem(listItems, Number(inputID), 'id');
     changeCompletedState(inputID);
     const completedState = listItems[index].completed;
 
@@ -201,85 +268,13 @@ listContainer.addEventListener('keydown', (e)=> {
 
 function changeCompletedState(id){
   const liId = Number(id);
-  const index = findIndexItem(liId, 'id');
+  const index = findIndexItem(listItems ,liId, 'id');
   const result = index !== -1 
     ? listItems[index].completed = !listItems[index].completed 
     : 'index not found';
   return result;
 }
 
-function findIndexItem(targetValue, key){
-  return listItems.findIndex(element => element[key] === targetValue);
-}
-
-function addItemToList(id, text, visibilityClass){
-  const li = document.createElement('li');
-  li.classList.add('li');
-  li.classList.add(visibilityClass);
-  li.id = id
-  li.setAttribute('draggable', 'true');
-  li.tabIndex = 0;
-
-  li.innerHTML = `<label for="input-${id}" class="label-li">
-        <input type="checkbox" data-input="${id}">
-        <span class="custom-check round round-hoverable" data-check="${id}" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9" data-svg="${id}" class="check-svg"><path fill="none" stroke="#fff" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>
-        </span>
-        <span class="todo-text" data-text="${id}">${text}</span>
-      </label>
-      <button type="button" class="delete" data-id="${id}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="var(--accent)" fill-rule="evenodd" d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z"/></svg>
-      </button>`;
-
-      li.addEventListener('dragstart', (e)=>{
-        e.dataTransfer.clearData();
-        e.dataTransfer.setData('text/plain', e.target.id);
-        e.dataTransfer.effectAllowed = 'move';
-      });
-
-      li.addEventListener('dragover', (e)=> {
-        e.preventDefault();
-        e.dataTransfer.effectAllowed = 'move';
-      });
-
-      li.addEventListener('drop', (e)=>{
-        e.preventDefault();
-        const data = e.dataTransfer.getData('text');
-        const source = document.getElementById(data);
-        const targetLi = e.target.closest('li');
-        const targetId = targetLi.id;
-  
-        if(!targetLi || targetLi === source) return; 
-        // const draggedElementIndex = listItems.findIndex(item => item.id === Number(source.id));
-        const draggedElementIndex = findIndexItem(Number(source.id), 'id');
-        // const dropElementIndex = listItems.findIndex(item => item.id === Number(targetId));
-
-        const targetLiMeasures = targetLi.getBoundingClientRect();
-        const midpoint = targetLiMeasures.top + targetLiMeasures.height / 2;
-
-        
-        
-        if(e.clientY < midpoint){
-          const liElementOnListItems = listItems[draggedElementIndex];
-          const targetIndex = findIndexItem(Number(targetLi.id), 'id');
-          listItems.splice(draggedElementIndex, 1);
-          if(draggedElementIndex < targetIndex){
-            listItems.splice(targetIndex -1, 0, liElementOnListItems);
-            } else {
-            listItems.splice(targetIndex, 0, liElementOnListItems);
-            }
-          listContainer.insertBefore(source, targetLi);
-        } else{
-          const liElementOnListItems = listItems[draggedElementIndex];
-          const targetIndex = findIndexItem(Number(targetLi.id), 'id');
-          listItems.splice(draggedElementIndex, 1);
-          listItems.splice(targetIndex, 0, liElementOnListItems);
-          listContainer.insertBefore(source, targetLi.nextSibling);
-        }
-      })
-
-      return li;
-    }
 
 
 
