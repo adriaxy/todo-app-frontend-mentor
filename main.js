@@ -2,6 +2,12 @@ import {
   countActiveItems
 } from './helpers.js';
 
+import {
+  changeClassVisibility,
+  updateItemsLeftUI,
+  createNewItem
+} from './domHelpers.js';
+
 const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
 const $id = id => document.getElementById(id);
@@ -89,40 +95,24 @@ stateButtons.addEventListener('click', (e)=> {
   updateItemsLeftUI(itemsLeftText, listItems);;
 });
 
-function changeClassVisibility(element, list, flag){
-      const id = Number(element.id)
-      const index = getIndexByKey(list, id, 'id');
-      const completed = list[index].completed
-      if(completed === flag){
-        element.classList.add('show');
-        element.classList.remove('hide');
-      } else {
-        element.classList.add('hide');
-        element.classList.remove('show');
-      }
-}
-
 clearCompleted.addEventListener('click', ()=> {
   if(isEmpty())return;
-    console.log(listItems)
+
   const liElements = $$('li');
+  
   listItems = listItems.filter(item => !item.completed);
+  
   liElements.forEach(li => {
     const liId = Number(li.id);
     if(!listItems.find(item => item.id === liId)) li.remove();
   })
-  console.log(listItems)
 })
 
 
 //Form
-form.addEventListener('submit', (e)=> {
-  handleAddItem(e);
-});
+form.addEventListener('submit', handleAddItem);
 
-addItemBtn.addEventListener('click', (e)=> {
-  handleAddItem(e);
-});
+addItemBtn.addEventListener('click', handleAddItem);
 
 function handleAddItem(e){
   e.preventDefault();
@@ -131,28 +121,19 @@ function handleAddItem(e){
     alert('Please, write a new task');
     return
   };
+
   addItem();
   updateItemsLeftUI(itemsLeftText, listItems);
 }
 
-function createNewItem(inputElement){
-  listItems.unshift(
-    {
-      text: inputElement.value,
-      completed: false,
-      id: Date.now()
-    }
-  )
-};
-
 function addItem(){
   emptyList.style.display='none';
-      createNewItem(input);
-      const visibilityClass = currentFilter === 'completed' ? 'hide' : 'show'
-      // const lastItem = listItems.length-1;
-      const newLi = addItemToList(listItems[0].id, listItems[0].text, visibilityClass)
-      listContainer.prepend(newLi);
-      input.value = '';
+  createNewItem(listItems, input);
+  const visibilityClass = currentFilter === 'completed' ? 'hide' : 'show'
+  // const lastItem = listItems.length-1;
+  const newLi = addItemToList(listItems[0].id, listItems[0].text, visibilityClass)
+  listContainer.prepend(newLi);
+  input.value = '';
 }
 
 listContainer.addEventListener('click', (e)=> {
@@ -225,10 +206,6 @@ function changeCompletedState(id){
     ? listItems[index].completed = !listItems[index].completed 
     : 'index not found';
   return result;
-}
-
-function getIndexByKey(list,targetValue, key){
-  return list.findIndex(element => element[key] === targetValue);
 }
 
 function findIndexItem(targetValue, key){
@@ -370,8 +347,5 @@ function toggleTheme() {
   body.dataset.theme = current() === 'dark' ? 'light' : 'dark';
 }
 
-function updateItemsLeftUI(text, list){
-  text.textContent = countActiveItems(list);
-}
 
 
