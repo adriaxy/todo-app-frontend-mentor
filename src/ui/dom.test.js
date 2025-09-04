@@ -3,7 +3,8 @@
  */
 import {createNewItem,
     updateItemsLeftUI,
-    changeClassVisibility
+    changeClassVisibility,
+    changeCompletedState
 } from './dom.js'
 
 describe('Change class visibility', ()=> {
@@ -146,4 +147,113 @@ describe('Creates new item and updates items left UI', ()=> {
         expect(listItems[0].completed).toBe(false);
         expect(textElement.textContent).toBe('1')
     })
+})
+
+describe('Toggle completed state', ()=> {
+    test('change completed state to true when index is found on the list', ()=> {
+        const id = '3';
+        const listItems = [
+        {
+            text: 'text1',
+            completed: false,
+            id: 1,
+        },
+        {
+            text: 'text2',
+            completed: true,
+            id: 2,
+        },
+        {
+            text: 'text3',
+            completed: false,
+            id: 3,
+        }
+        ]
+        
+        changeCompletedState(listItems, id);
+        expect(listItems[2].completed).toBe(true);
+    });
+
+    test('change completed state to false when index is found on the list', ()=> {
+        const id = '1';
+        const listItems = [
+        {
+            text: 'text1',
+            completed: true,
+            id: 1,
+        },
+        {
+            text: 'text2',
+            completed: true,
+            id: 2,
+        },
+        {
+            text: 'text3',
+            completed: false,
+            id: 3,
+        }
+        ]
+        
+        changeCompletedState(listItems, id);
+        expect(listItems[0].completed).toBe(false);
+    });
+
+    test('returns "index not found" when the id is not on the list', ()=> {
+        const id = '4';
+        const listItems = [
+        {
+            text: 'text1',
+            completed: true,
+            id: 1,
+        },
+        {
+            text: 'text2',
+            completed: true,
+            id: 2,
+        },
+        {
+            text: 'text3',
+            completed: false,
+            id: 3,
+        }
+        ]
+        
+        let result = changeCompletedState(listItems, id);
+        expect(result).toBe(null);
+    });
+
+    test('returns "index not found" when the list is empty', ()=> {
+        const id = '4';
+        const listItems = [];
+        let result = changeCompletedState(listItems, id);
+        expect(result).toBe(null);
+    });
+
+    
+    test('change completed state to false when the element is clicked and index is found on the list', ()=> {
+        const listItems = [
+        {
+            text: 'text1',
+            completed: true,
+            id: 1,
+        },
+        {
+            text: 'text2',
+            completed: true,
+            id: 2,
+        },
+        {
+            text: 'text3',
+            completed: false,
+            id: 3,
+        }
+        ]
+        const li = document.createElement('li');
+        li.id = '1';
+        const id = li.id;
+        li.addEventListener('click', ()=> {changeCompletedState(listItems, id)});
+        li.click();
+        
+        expect(listItems[0].completed).toBe(false);
+    });
 })

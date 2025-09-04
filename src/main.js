@@ -5,7 +5,8 @@ import {
 import {
   changeClassVisibility,
   updateItemsLeftUI,
-  createNewItem
+  createNewItem,
+  changeCompletedState
 } from './ui/dom.js';
 
 const $ = selector => document.querySelector(selector);
@@ -226,7 +227,7 @@ listContainer.addEventListener('click', (e)=> {
     const customCheck = $(`span[data-check="${inputID}"]`);
     const customCheckSVG = $(`svg[data-svg="${inputID}"]`)
     const index = findIndexItem(listItems, Number(inputID), 'id');
-    changeCompletedState(inputID);
+    changeCompletedState(listItems, inputID);
     const completedState = listItems[index].completed;
 
    if(completedState){
@@ -264,15 +265,6 @@ listContainer.addEventListener('keydown', (e)=> {
     }
   }
 });
-
-function changeCompletedState(id){
-  const liId = Number(id);
-  const index = findIndexItem(listItems ,liId, 'id');
-  const result = index !== -1 
-    ? listItems[index].completed = !listItems[index].completed 
-    : 'index not found';
-  return result;
-}
 
 btnTheme.addEventListener('click', (e)=> {
   e.preventDefault();

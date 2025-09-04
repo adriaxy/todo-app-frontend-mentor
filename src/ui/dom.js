@@ -30,4 +30,13 @@ export function createNewItem(list, inputElement){
   )
 };
 
+export function changeCompletedState(list, id){
+  const liId = Number(id);
+  const index = findIndexItem(list ,liId, 'id');
+  const result = index !== -1 
+    ? list[index].completed = !list[index].completed 
+    : null;
+  return result;
+}
+
 

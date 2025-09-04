@@ -59,7 +59,7 @@ describe('find index of item', ()=> {
         expect(findIndexItem(listItems, 'text2', 'text')).toBe(1)
     });
 
-    test('returns first indez when key is not unique', ()=> {
+    test('returns first index when key is not unique', ()=> {
         expect(findIndexItem(listItems, false, 'completed')).toBe(0)
     });
 
